@@ -210,8 +210,8 @@ loop:	call 	clear_leds
 		stw		t0, PADDLES (zero)					;left_paddle_coord
 		stw 	t1, PADDLES +4 (zero)				;right_paddle_coord
 
-		subi	sp, sp, 4							;make free space in Stack
-		stw 	ra, sp 								;push return address
+		addi	sp, sp, -4							;make free space in Stack
+		stw 	ra, 0(sp) 								;push return address
 
 	draw_left:
 		add 	a0, zero, zero						;a0 = xcoord
@@ -231,7 +231,7 @@ loop:	call 	clear_leds
 		addi	a1, a1, 1
 		call 	set_pixel
 
-		ldw 	ra, sp 								;pop return address
+		ldw 	ra, 0(sp) 								;pop return address
 		addi 	sp, sp, 4
 
 		ret
