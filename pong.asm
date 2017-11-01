@@ -6,21 +6,14 @@
 
 
 
-main:	addi	t0, zero, 0x5
-		addi 	t1, zero, 0x2
-		stw		t0, BALL(zero)
-		stw		t1, BALL+4(zero)
-		addi	t0, zero, 0x1
-		addi 	t1, zero, 0x1
-		stw		t0, BALL+8(zero)
-		stw		t1, BALL+12(zero)
+main:	addi	t0, zero, 0x3
+		stw		t0, PADDLES(zero)
+		stw		t0, PADDLES+4(zero)
+		addi	sp, zero, LEDS
 
 loop:	call 	clear_leds
-		call	hit_test
-		ldw		a0, BALL(zero)
-		ldw		a1, BALL+4(zero)
-		call	set_pixel
-		call	move_ball
+		call	draw_paddles
+		call	move_paddles
 		br		loop
 		
 
