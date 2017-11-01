@@ -172,35 +172,26 @@ loop:	call 	clear_leds
 		and 	t7, t0, t3							;t7 = button(3)
 		addi	t8, zero, 0x006						;t8 = 6
 
-	l_test:	
-		beq		t3, t4, l_up						;if button(0) = 1 => l_up
-		beq		t3, t5, l_down						;if button(1) = 1 => l_down
-		br		r_test	
-
 	l_up:
-		bge 	t3, t1, r_test						;if left_paddle <= 1 => r_test
+		beq 	t4, zero, l_down					;if button(0) = 0 => l_down
+		bge 	t3, t1, l_down						;if left_paddle <= 1 => l_down
 		sub		t1, t1, t3							;t1 = t1 - 1
-		br r_test
 
 	l_down:
-		bge 	t1, t8, r_test						;if left_paddle >= 8 => r_test
+		beq		t5, zero, r_up						;if button(1) = 0 => r_up
+		bge 	t1, t8, r_up						;if left_paddle >= 8 => r_up
 		add		t1, t1, t3							;t1 = t1 + 1
-		br r_test
 
-	r_test:
-		beq		t2, t6, r_up						;if button(2) = 1 => r_up
-		beq		t2, t7, r_down						;if button(3) = 1 => r_down
-		br		paddle_change
 
 	r_up:
-		bge 	t3, t2, paddle_change				;if right <= 1 => paddle_change
+		beq		t6, zero, r_down					;if button(2) = 0 => r_down
+		bge 	t3, t2, r_down						;if right <= 1 => r_down
 		sub		t2, t2, t3							;t2 = t2 - 1
-		br 		paddle_change
 
 	r_down:
+		beq		t7, zero, paddle_change				;if button(3) = 0 => paddle_change
 		bge 	t2, t8, paddle_change				;if right_paddle >= 8 => paddle_change
 		add		t2, t2, t3							;t2 = t2 + 1
-		br 		paddle_change
 
 
 	paddle_change:
