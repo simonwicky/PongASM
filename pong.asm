@@ -156,3 +156,60 @@ loop:	call 	clear_leds
 
 
 
+; BEGIN:move_paddles
+	move_paddles:
+		ldw		t0, BUTTONS+4(zero)					;t0 = edgecapture
+		ldw		t1, PADDLES (zero)					;t1 = left_paddle
+		ldw		t2, PADDLES+4 (zero)				;t2 = right_paddle
+
+		addi	t3, zero, 0x0001 					;t3 = 1
+		and 	t4, t0, t3							;t4 = button(0)
+		srli	t0, t0, 0x0001						;t0 = t0 >> 1
+		and 	t5, t0, t3							;t5 = button(1)
+		srli	t0, t0, 0x0001						;t0 = t0 >> 1
+		and 	t6, t0, t3							;t6 = button(2)
+		srli	t0, t0, 0x0001						;t0 = t0 >> 1
+		and 	t7, t0, t3							;t7 = button(3)
+		addi	t8, zero, 0x006						;t8 = 6
+
+	l_test:	
+		beq		t3, t4, l_up						;if button(0) = 1 => l_up
+		beq		t3, t5, l_down						;if button(1) = 1 => l_down
+		br		r_test	
+
+	l_up:
+		bge 	t3, t1, r_test						;if left_paddle <= 1 => r_test
+		sub		t1, t1, t3							;t1 = t1 - 1
+		br r_test
+
+	l_down:
+		bge 	t1, t8, r_test						;if left_paddle >= 8 => r_test
+		add		t1, t1, t3							;t1 = t1 + 1
+		br r_test
+
+	r_test:
+		beq		t2, t6, r_up						;if button(2) = 1 => r_up
+		beq		t2, t7, r_down						;if button(3) = 1 => r_down
+		br		paddle_change
+
+	r_up:
+		bge 	t3, t2, paddle_change				;if right <= 1 => paddle_change
+		sub		t2, t2, t3							;t2 = t2 - 1
+		br 		paddle_change
+
+	r_down:
+		bge 	t2, t8, paddle_change				;if right_paddle >= 8 => paddle_change
+		add		t2, t2, t3							;t2 = t2 + 1
+		br 		paddle_change
+
+
+	paddle_change:
+		stw		t1, PADDLES (zero)					;sto left_paddle
+		stw		t2, PADDLES+4 (zero)				;sto right_paddle
+		stw		zero, BUTTONS+4(zero)				;edgecapture = 0
+		ret
+
+; END:move_paddles
+
+
+
