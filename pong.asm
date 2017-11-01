@@ -170,7 +170,7 @@ loop:	call 	clear_leds
 		and 	t6, t0, t3							;t6 = button(2)
 		srli	t0, t0, 0x0001						;t0 = t0 >> 1
 		and 	t7, t0, t3							;t7 = button(3)
-		addi	t8, zero, 0x006						;t8 = 6
+		addi	t0, zero, 0x006						;t0 = 6
 
 	l_up:
 		beq 	t4, zero, l_down					;if button(0) = 0 => l_down
@@ -179,7 +179,7 @@ loop:	call 	clear_leds
 
 	l_down:
 		beq		t5, zero, r_up						;if button(1) = 0 => r_up
-		bge 	t1, t8, r_up						;if left_paddle >= 8 => r_up
+		bge 	t1, t0, r_up						;if left_paddle >= 6 => r_up
 		add		t1, t1, t3							;t1 = t1 + 1
 
 
@@ -190,7 +190,7 @@ loop:	call 	clear_leds
 
 	r_down:
 		beq		t7, zero, paddle_change				;if button(3) = 0 => paddle_change
-		bge 	t2, t8, paddle_change				;if right_paddle >= 8 => paddle_change
+		bge 	t2, t0, paddle_change				;if right_paddle >= 6 => paddle_change
 		add		t2, t2, t3							;t2 = t2 + 1
 
 
