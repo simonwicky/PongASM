@@ -127,7 +127,23 @@ main:  addi a0, zero, 0x0008
 
 ; END:hit_test
 
+; BEGIN:move_ball
 
+	move_ball:
+		ldw 	t0, BALL(zero)					;t0 = BALL X
+		ldw 	t1, BALL + 4 (zero) 			;t1 = BALL y
+		ldw 	t2, BALL + 8 (zero)				;t2 = BALL Vx
+		ldw 	t3, BALL + 12 (zero)			;t3 = BALL vy
+
+
+		add 	t4, t0, t2						;t4 = t0 + t2 (new BALL x)
+		add 	t5, t1, t3						;t5 = t1 + t3 (new BALL y)
+
+		stw		t4, BALL (zero)					;store the new BALL x 
+		stw		t5, BALL + 4 (zero)				;store the new BALL y
+
+
+; END:move_ball
 
 
 
