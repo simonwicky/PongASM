@@ -17,6 +17,8 @@ main:	addi	t0, zero, 0x5
 
 loop:	call 	clear_leds
 		call	hit_test
+		ldw		a0, BALL(zero)
+		ldw		a1, BALL+4(zero)
 		call	set_pixel
 		call	move_ball
 		br		loop
@@ -97,6 +99,7 @@ loop:	call 	clear_leds
 		beq		t2, zero, up				;if t2 = zero => up
 		addi	t5, zero, 0x7				;t5 = 7
 		beq		t2, t5, bottom				;if t2 = 7 => bottom
+		br		x_test
 
 
 	up:
@@ -111,6 +114,7 @@ loop:	call 	clear_leds
 		beq		t1, zero, left				;if t2 = zero => left
 		addi	t5, zero, 0xB				;t5 = 11
 		beq		t1, t5, right				;if t2 = 11 => right
+		br		change_v
 
 	left:
 		add		t3, t3, t0;					;t3 = t3 + 2
@@ -145,6 +149,7 @@ loop:	call 	clear_leds
 
 		stw		t0, BALL (zero)					;store the new BALL x 
 		stw		t1, BALL + 4 (zero)				;store the new BALL y
+		ret
 
 
 ; END:move_ball
