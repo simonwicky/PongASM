@@ -217,18 +217,18 @@ loop:	call 	clear_leds
 		add 	a0, zero, zero						;a0 = xcoord
 		addi 	a1, t0, -1							;a1 = y coord up pixel
 		call 	set_pixel							;draw 
-		add 	a1, t0, zero						;a1 = center pixel y coord
+		addi 	a1, a1, 1						;a1 = center pixel y coord
 		call 	set_pixel							;draw
-		addi	a1, t0, 1							;a1 = bottom pixel coord y
+		addi	a1, a1, 1							;a1 = bottom pixel coord y
 		call 	set_pixel
 
 	draw_right:
 		addi 	a0, zero, 11						;idem here
 		addi 	a1, t1, -1
 		call 	set_pixel
-		add 	a1, t1, zero
+		addi 	a1, a1, 1
 		call 	set_pixel
-		addi	a1, t1, 1
+		addi	a1, a1, 1
 		call 	set_pixel
 
 		ldw 	ra, sp 								;pop return address
