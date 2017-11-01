@@ -6,17 +6,21 @@
 
 
 
-main:  addi a0, zero, 0x0008
-    addi a1, zero, 0x0003
-    call set_pixel
-    addi a0, zero, 0x0009
-    addi a1, zero, 0x0004
-    call set_pixel
-    addi a0, zero, 0x0005
-    addi a1, zero, 0x0006
-    call set_pixel
-    call clear_leds
-    break
+main:	addi	t0, zero, 0x5
+		addi 	t1, zero, 0x2
+		stw		t0, BALL(zero)
+		stw		t1, BALL+4(zero)
+		addi	t0, zero, 0x1
+		addi 	t1, zero, 0x1
+		stw		t0, BALL+8(zero)
+		stw		t1, BALL+12(zero)
+
+loop:	call 	clear_leds
+		call	hit_test
+		call	set_pixel
+		call	move_ball
+		br		loop
+		
 
 
 ; BEGIN:clear_leds
