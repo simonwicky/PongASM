@@ -80,7 +80,52 @@ main:  addi a0, zero, 0x0008
 
 
 
-; BEGIN:hit_Test
+; BEGIN:hit_test
+	
+	hit_test:
+		addi 	t0, zero ,0x2 				;t0 = 2
+		ldw		t1, BALL (zero)				;t1 = BALL X
+		ldw		t2, BALL+4(zero)			;t2 = BALL Y
+		ldw		t3, BALL+8(zero)			;t3 = BALL VX
+		ldw		t4, BALL+12(zero)			;t4 = BALL VY
+
+	y_test:
+		beq		t2, zero, up				;if t2 = zero => up
+		addi	t5, zero, 0x7				;t5 = 7
+		beq		t2, t5, bottom				;if t2 = 7 => bottom
+
+
+	up:
+		add		t4, t4, t0;					;t4 = t4 + 2
+		br 		x_test
+
+	bottom:
+		sub		t4, t4, t0;					;t4 = t4 - 2
+		br 		x_test
+
+	x_test:
+		beq		t1, zero, left				;if t2 = zero => left
+		addi	t5, zero, 0xB				;t5 = 11
+		beq		t1, t5, right				;if t2 = 11 => right
+
+	left:
+		add		t3, t3, t0;					;t3 = t3 + 2
+		br 		change_v
+
+	right:
+		sub		t3, t3, t0;					;t3 = t3 - 2
+		br 		change_v
+
+
+	change_v:
+		stw		t3, BALL+8(zero)			;t3 = BALL VX
+		stw		t4, BALL+12(zero)			;t4 = BALL VY	
+		ret
+
+
+
+
+; END:hit_test
 
 
 
