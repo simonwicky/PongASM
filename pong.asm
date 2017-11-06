@@ -201,15 +201,17 @@ loop:	call 	clear_leds
 
 	draw_paddles:
 
-		addi	sp, sp, -4							;make free space in Stack
-		stw 	ra, 0(sp) 								;push return address
+		addi	sp, sp, -12							;make free space in Stack 
+		stw		a0, 8(sp)							;push a0
+		stw		a1, 4(sp)							;push a1
+		stw 	ra, 0(sp) 							;push return address
 
 	draw_left:
 		ldw		t0, PADDLES (zero)					;left_paddle_coord
 		add 	a0, zero, zero						;a0 = xcoord
 		addi 	a1, t0, -1							;a1 = y coord up pixel
 		call 	set_pixel							;draw 
-		addi 	a1, a1, 1						;a1 = center pixel y coord
+		addi 	a1, a1, 1							;a1 = center pixel y coord
 		call 	set_pixel							;draw
 		addi	a1, a1, 1							;a1 = bottom pixel coord y
 		call 	set_pixel
@@ -225,7 +227,9 @@ loop:	call 	clear_leds
 		call 	set_pixel
 
 		ldw 	ra, 0(sp) 								;pop return address
-		addi 	sp, sp, 4
+		ldw 	a1, 4(sp)								;pop a1
+		ldw 	a0, 8(sp)								;pop a0
+		addi 	sp, sp, 12
 
 		ret
 		
