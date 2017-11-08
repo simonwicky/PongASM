@@ -404,19 +404,21 @@ update_score:
 
 
 wait:
-	addi 	t0, zero, 10000
+	addi 	t0, zero, 1
+	slli    t0, 19
 timer:
 	addi 	t0, t0, -1
-	blt 	t0, 0, return
+	blt 	t0, zero, return
 	br timer
 return:
 	ret
 
 wait_score:
-	addi 	t0, zero, 100000
+	addi 	t0, zero, 1
+	slli	t0, 21
 timer_score:
 	addi 	t0, t0, -1
-	blt 	t0, 0, return_score
+	blt 	t0, zero, return_score
 	br timer_score
 return_score:
 	ret
