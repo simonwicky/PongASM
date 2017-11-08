@@ -226,9 +226,9 @@ loop:	call 	clear_leds
 		addi	a1, a1, 1
 		call 	set_pixel
 
-		ldw 	ra, 0(sp) 								;pop return address
-		ldw 	a1, 4(sp)								;pop a1
-		ldw 	a0, 8(sp)								;pop a0
+		ldw 	ra, 0(sp) 							;pop return address
+		ldw 	a1, 4(sp)							;pop a1
+		ldw 	a0, 8(sp)							;pop a0
 		addi 	sp, sp, 12
 
 		ret
