@@ -4,35 +4,55 @@
 .equ	LEDS,		0x2000		;LED addesses
 .equ	BUTTONS,	0x2030		;Button addresses
 
+init_score:
+	    stw		zero, SCORES(zero)			;initialize scores
+	    stw		zero, SCORES+4(zero)
+
+init_round:
+	  	addi	t0, zero, 3
+	    stw		t0, PADDLES(zero)			;initialize paddles
+	    stw   	t0, PADDLES+4(zero)
+
+	    addi  	sp, zero, LEDS
+
+	    addi  	t0, zero, 6
+	    stw   	t0, BALL(zero)
+	    addi  	t0, zero, 3 				;initialize ball position
+	    stw    	t0, BALL +4(zero)
 
 
-#main:  addi  t0, zero, 0x2
-#    stw    t0, PADDLES(zero)
-#    stw    t0, PADDLES+4(zero)
-#    addi  sp, zero, LEDS
-#    addi  t0, zero, 0x2
-#    stw    t0,  BALL(zero)
-#    addi  t0, zero, 0x1
-#    stw    t0, BALL +4(zero)
-#    addi  t0, zero, -1
-#    stw    t0, BALL +8(zero)
-#    stw    t0, BALL +12(zero)
-#
-#loop:  call   clear_leds
-#    ldw    a0, BALL(zero)
-#    ldw    a1, BALL+4(zero)
-#    call   set_pixel
-#    call  draw_paddles
-#    call  hit_test
-#    call   move_ball
-#    call  move_paddles
-#    br    loop
+	    addi  	t0, zero, -1
+	    stw    	t0, BALL +8(zero)			;initialize ball speed
+	    stw    	t0, BALL +12(zero)
 
-main:  	addi  t0, zero, 0x5
-    	stw   t0, SCORES(zero)
-    	addi 	t0,t0,1
-    	stw    t0, SCORES+4(zero)
-    	call 	display_score
+
+
+round: 
+		call   	clear_leds
+	   	ldw    	a0, BALL(zero)
+	   	ldw    	a1, BALL+4(zero)
+	   	call   	set_pixel
+	   	call  	draw_paddles
+	   	call 	hit_test
+	   	bne 	v0, zero, update_score		
+	   	call  	move_ball
+	   	call  	move_paddles
+	   	br    	round
+
+update_score:
+		slli	t0, v0, 2				;t0 = 4 * v0
+		addi	t0, t0, -4				;t0 -= 4
+		ldw 	t1, SCORES(t0)		
+		addi	t1, t1, 1				; update_score
+		stw		t1, SCORES(t0)	
+		call 	display_score
+		addi	t2, zero, 10
+		beq		t1, t2, end
+		call 	wait_score
+		call 	init_round
+
+
+
 	
 		
 
@@ -378,6 +398,8 @@ main:  	addi  t0, zero, 0x5
 		ret
 
 ; END:display_score
+
+end:
 
 
 
