@@ -413,6 +413,15 @@ timer:
 return:
 	ret
 
+wait_score:
+	addi 	t0, zero, 100000
+timer_score:
+	addi 	t0, t0, -1
+	blt 	t0, 0, return_score
+	br timer_score
+return_score:
+	ret
+
 
 
 
