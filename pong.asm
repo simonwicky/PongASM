@@ -37,7 +37,7 @@ loop:  call   clear_leds
 		stw zero, LEDS + 4 (zero)
 		stw zero, LEDS + 8 (zero)
 		ret
-		
+
 ; END:clear_leds
 
 
@@ -362,7 +362,7 @@ loop:  call   clear_leds
 
 		addi 	t6, zero, 17						;t6 = 17
 		slli	t6, t6, 2							;t6 = t6*4
-		ldw 	t5, font_data(t6)					t5 = words to display separator
+		ldw 	t5, font_data(t6)					;t5 = words to display separator
 
 		stw		t3, LEDS(zero)						;store score 1 in the LEDS
 		stw		t4, LEDS+8(zero)					;store score 2 in the LEDS
