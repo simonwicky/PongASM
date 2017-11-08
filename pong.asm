@@ -99,16 +99,16 @@ loop:	call 	clear_leds
 		beq		t2, zero, up				;if t2 = zero => up
 		addi	t5, zero, 0x7				;t5 = 7
 		beq		t2, t5, bottom				;if t2 = 7 => bottom
-		br		x_test
+		br		x_paddle
 
 
 	up:
 		add		t4, t4, t0;					;t4 = t4 + 2
-		br 		x_test
+		br 		x_paddlee
 
 	bottom:
 		sub		t4, t4, t0;					;t4 = t4 - 2
-		br 		x_test
+		br 		x_paddle
 
 	x_paddle:
 		add 	s1, t1, t3					;next position x of the ball
