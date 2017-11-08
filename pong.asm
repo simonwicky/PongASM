@@ -82,11 +82,11 @@ loop:	call 	clear_leds
 ; BEGIN:hit_test
 	stack_s_temp:
 		addi 	sp, sp, -20					;make 5 places in Stack
-		stw 	s0, sp(16)					;push s0
-		stw 	s1, sp(12)					;push s1
-		stw 	s2, sp(8)					;push s2
-		stw 	s3, sp(4)					;push s3
-		stw 	s4	sp(0)					;push s4
+		stw 	s0, 16(sp)					;push s0
+		stw 	s1, 12(sp)					;push s1
+		stw 	s2, 8(sp)					;push s2
+		stw 	s3, 4(sp)					;push s3
+		stw 	s4	0(sp)					;push s4
 	
 	hit_test:
 		addi 	t0, zero ,0x2 				;t0 = 2
@@ -104,7 +104,7 @@ loop:	call 	clear_leds
 
 	up:
 		add		t4, t4, t0;					;t4 = t4 + 2
-		br 		x_paddlee
+		br 		x_paddle
 
 	bottom:
 		sub		t4, t4, t0;					;t4 = t4 - 2
@@ -119,7 +119,7 @@ loop:	call 	clear_leds
 
 
 	x_left_paddle:
-		ldw 	s1, t2, t4 					;s1 = next coord y of the ball
+		addi 	s1, t2, t4 					;s1 = next coord y of the ball
 		ldw 	s0, PADDLES(zero)			;s0 = y coord left_paddle
 		addi 	s2, s0, -1					;uppper pixel of the left paddle
 		beq		s1, s2, up_pix_left
@@ -147,7 +147,7 @@ loop:	call 	clear_leds
 
 
 	x_right_paddle:
-		ldw 	s1, t2, t4 					;s1 = next coord y of the ball
+		addi 	s1, t2, t4 					;s1 = next coord y of the ball
 		ldw 	s0, PADDLES+4(zero)			;s0 = y coord right_paddle
 		addi 	s2, s0, -1					;uppper pixel of the right paddle
 		beq		s1, s2, up_pix_right
@@ -195,11 +195,11 @@ loop:	call 	clear_leds
 		stw		t4, BALL+12(zero)			;t4 = BALL VY	
 
 	pop_s_temp:
-		ldw 	s4, sp(0)					;pop s4
-		ldw 	s3, sp(4)					;pop s3
-		ldw 	s2, sp(8)					;pop s2
-		ldw 	s1, sp(12)					;pop s1
-		ldw 	s0, sp(16)					;pop s0
+		ldw 	s4, 0(sp)					;pop s4
+		ldw 	s3, 4(sp)					;pop s3
+		ldw 	s2, 8(sp)					;pop s2
+		ldw 	s1, 12(sp)					;pop s1
+		ldw 	s0, 16(sp)					;pop s0
 		addi 	sp, sp, 20					;free space in Stack
 
 		ret
@@ -319,3 +319,8 @@ loop:	call 	clear_leds
 
 
 ; END:draw_paddles
+
+
+; BEGIN:display_score
+
+; END:display_score
