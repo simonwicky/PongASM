@@ -405,7 +405,7 @@ update_score:
 
 wait:
 	addi 	t0, zero, 1
-	slli    t0,t0, 19
+	slli    t0,t0, 20
 timer:
 	addi 	t0, t0, -1
 	blt 	t0, zero, return
@@ -415,7 +415,7 @@ return:
 
 wait_score:
 	addi 	t0, zero, 1
-	slli	t0,t0, 21
+	slli	t0,t0, 22
 timer_score:
 	addi 	t0, t0, -1
 	blt 	t0, zero, return_score
@@ -447,4 +447,5 @@ font_data:
 
 
  end:
+ 	break
 
