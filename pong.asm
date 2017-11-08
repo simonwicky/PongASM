@@ -6,15 +6,27 @@
 
 
 
-main:	addi	t0, zero, 0x3
-		stw		t0, PADDLES(zero)
-		stw		t0, PADDLES+4(zero)
-		addi	sp, zero, LEDS
+main:  addi  t0, zero, 0x2
+    stw    t0, PADDLES(zero)
+    stw    t0, PADDLES+4(zero)
+    addi  sp, zero, LEDS
+    addi  t0, zero, 0x2
+    stw    t0,  BALL(zero)
+    addi  t0, zero, 0x1
+    stw    t0, BALL +4(zero)
+    addi  t0, zero, -1
+    stw    t0, BALL +8(zero)
+    stw    t0, BALL +12(zero)
 
-loop:	call 	clear_leds
-		call	draw_paddles
-		call	move_paddles
-		br		loop
+loop:  call   clear_leds
+    ldw    a0, BALL(zero)
+    ldw    a1, BALL+4(zero)
+    call   set_pixel
+    call  draw_paddles
+    call  hit_test
+    call   move_ball
+    call  move_paddles
+    br    loop
 		
 
 
@@ -25,6 +37,7 @@ loop:	call 	clear_leds
 		stw zero, LEDS + 4 (zero)
 		stw zero, LEDS + 8 (zero)
 		ret
+		
 ; END:clear_leds
 
 
@@ -124,23 +137,23 @@ loop:	call 	clear_leds
 		beq		s1, s2, up_pix_left
 		addi	s2, s0, 1					;s0 = lower pixel of the left paddle
 		beq 	s1, s2, low_pix_right
-		bne 	s1, s0, x_test
+		bne 	s1, s0, y_test_after
 		addi 	t3, t3, 2					;t3 += 2
-		br 		x_test
+		br 		y_test_after
 
 	up_pix_left:
 		addi 	t3, t3, 2					;t3 += 2
 		addi	t5, zero, 1					;t5 = 1
-		bne 	t4, t5, x_test				;if the ball goes up -> nothing
+		bne 	t4, t5, y_test_after		;if the ball goes up -> nothing
 		addi 	t4, t4, -2					;t4 = -1
-		br 		x_test
+		br 		y_test_after
 
 	low_pix_left:
 		addi 	t3, t3, 2					;t3 += 2
 		addi	t5, zero, -1				;t5 = -1
-		bne 	t4, t5, x_test				;if the ball goes down -> nothing
+		bne 	t4, t5, y_test_after		;if the ball goes down -> nothing
 		addi 	t4, t4, 2					;t4 = +1
-		br 		x_test
+		br 		y_test_after
 
 
 
@@ -152,22 +165,38 @@ loop:	call 	clear_leds
 		beq		s1, s2, up_pix_right
 		addi	s2, s0, 1					;s0 = lower pixel of the right paddle
 		beq 	s1, s2, low_pix_right
-		bne 	s1, s0, x_test
+		bne 	s1, s0, y_test_after
 		addi 	t3, t3, -2					;t3 -= 2
-		br 		x_test
+		br 		y_test_after
 
 	up_pix_right:
 		addi 	t3, t3, -2					;t3 -= 2
 		addi	t5, zero, 1					;t5 = 1
-		bne 	t4, t5, x_test				;if the ball goes up -> nothing
+		bne 	t4, t5, y_test_after		;if the ball goes up -> nothing
 		addi 	t4, t4, -2					;t4 = -1
-		br 		x_test
+		br 		y_test_after
 
 	low_pix_right:
 		addi 	t3, t3, -2					;t3 -= 2
 		addi	t5, zero, -1				;t5 = -1
-		bne 	t4, t5, x_test				;if the ball goes down -> nothing
+		bne 	t4, t5, y_test_after		;if the ball goes down -> nothing
 		addi 	t4, t4, 2					;t4 = +1
+		br 		y_test_after
+
+
+	y_test_after:
+		beq		t2, zero, up				;if t2 = zero => up
+		addi	t5, zero, 0x7				;t5 = 7
+		beq		t2, t5, bottom				;if t2 = 7 => bottom
+		br		x_test
+
+
+	up_after:
+		add		t4, t4, t0;					;t4 = t4 + 2
+		br 		x_test
+
+	bottom_after:
+		sub		t4, t4, t0;					;t4 = t4 - 2
 		br 		x_test
 
 
