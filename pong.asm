@@ -80,15 +80,14 @@ loop:	call 	clear_leds
 
 
 ; BEGIN:hit_test
-	stack_s_temp:
+	hit_test:
 		addi 	sp, sp, -20					;make 5 places in Stack
 		stw 	s0, 16(sp)					;push s0
 		stw 	s1, 12(sp)					;push s1
 		stw 	s2, 8(sp)					;push s2
 		stw 	s3, 4(sp)					;push s3
-		stw 	s4	0(sp)					;push s4
+		stw 	s4,	0(sp)					;push s4
 	
-	hit_test:
 		addi 	t0, zero ,0x2 				;t0 = 2
 		ldw		t1, BALL (zero)				;t1 = BALL X
 		ldw		t2, BALL+4(zero)			;t2 = BALL Y
@@ -119,7 +118,7 @@ loop:	call 	clear_leds
 
 
 	x_left_paddle:
-		addi 	s1, t2, t4 					;s1 = next coord y of the ball
+		add 	s1, t2, t4 					;s1 = next coord y of the ball
 		ldw 	s0, PADDLES(zero)			;s0 = y coord left_paddle
 		addi 	s2, s0, -1					;uppper pixel of the left paddle
 		beq		s1, s2, up_pix_left
@@ -147,7 +146,7 @@ loop:	call 	clear_leds
 
 
 	x_right_paddle:
-		addi 	s1, t2, t4 					;s1 = next coord y of the ball
+		add 	s1, t2, t4 					;s1 = next coord y of the ball
 		ldw 	s0, PADDLES+4(zero)			;s0 = y coord right_paddle
 		addi 	s2, s0, -1					;uppper pixel of the right paddle
 		beq		s1, s2, up_pix_right
@@ -322,5 +321,43 @@ loop:	call 	clear_leds
 
 
 ; BEGIN:display_score
+	display_score:
+		ldw 	t1, SCORES(zero)					;t1 = score player 1
+		ldw  	t2, SCORES+4(zero)					;t2 = score player 2
+
+		slli	t1, t1, 2							;t1 = t1*4
+		slli	t2, t2, 2							;t2 = t2*4
+
+		ldw 	t3, font_data(t1)					;t3 = word to display score 1
+		ldw 	t4, font_data(t2)					;t4 = word to display score 2
+
+		addi 	t6, zero, 17						;t6 = 17
+		slli	t6, t6, 2							;t6 = t6*4
+		ldw 	t5, font_data(t6)					t5 = words to display separator
+
+		stw		t3, LEDS(zero)						;store score 1 in the LEDS
+		stw		t4, LEDS+8(zero)					;store score 2 in the LEDS
+		stw		t5, LEDS+4(zero)					;store separator in the LEDS	
 
 ; END:display_score
+
+
+
+font_data: 
+	.word 0x7E427E00 ; 0
+ 	.word 0x407E4400 ; 1 
+ 	.word 0x4E4A7A00 ; 2 
+ 	.word 0x7E4A4200 ; 3 
+ 	.word 0x7E080E00 ; 4 
+ 	.word 0x7A4A4E00 ; 5 
+ 	.word 0x7A4A7E00 ; 6 
+ 	.word 0x7E020600 ; 7 
+ 	.word 0x7E4A7E00 ; 8 
+ 	.word 0x7E4A4E00 ; 9 
+ 	.word 0x7E127E00 ; A 
+ 	.word 0x344A7E00 ; B 
+ 	.word 0x42423C00 ; C 
+ 	.word 0x3C427E00 ; D 
+ 	.word 0x424A7E00 ; E 
+ 	.word 0x020A7E00 ; F 
+ 	.word 0x00181800 ; separator
