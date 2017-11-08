@@ -415,8 +415,8 @@ return:
 	ret
 
 wait_score:
-	addi 	t0, zero, 1
-	slli	t0,t0, 22
+	addi 	t0, zero, 3
+	slli	t0,t0, 21
 timer_score:
 	addi 	t0, t0, -1
 	blt 	t0, zero, return_score
