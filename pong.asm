@@ -37,6 +37,7 @@ round:
 	   	bne 	v0, zero, update_score		
 	   	call  	move_ball
 	   	call  	move_paddles
+	   	call 	wait
 	   	br    	round
 
 update_score:
@@ -47,9 +48,10 @@ update_score:
 		add		t2, t1, zero
 		stw		t1, SCORES(t0)	
 		call 	display_score
-		addi	t3, zero, 10
-		beq		t2, t3, end
-		;call 	wait_score
+		ldw 	t1, SCORES(t0)
+		addi	t2, zero, 10
+		beq		t1, t2, end
+		call 	wait_score
 		call 	init_round
 
 
@@ -401,9 +403,6 @@ update_score:
 ; END:display_score
 
 
-end:
-
-
 wait:
 	addi 	t0, zero, 10000
 timer:
@@ -443,3 +442,7 @@ font_data:
  	.word 0x424A7E00 ; E 
  	.word 0x020A7E00 ; F 
  	.word 0x00181800 ; separator
+
+
+ end:
+
