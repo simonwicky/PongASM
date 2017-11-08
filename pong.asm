@@ -145,11 +145,11 @@ update_score:
 
 
 	up:
-		add		t4, t4, t0;					;t4 = t4 + 2
+		addi	t4, zero, 1;				;t4 = 1
 		br 		x_paddle
 
 	bottom:
-		sub		t4, t4, t0;					;t4 = t4 - 2
+		addi	t4, zero, -1;				;t4 = -1
 		br 		x_paddle
 
 	x_paddle:
@@ -168,21 +168,21 @@ update_score:
 		addi	s2, s0, 1					;s0 = lower pixel of the left paddle
 		beq 	s1, s2, low_pix_left
 		bne 	s1, s0, x_test
-		addi 	t3, t3, 2					;t3 += 2
+		addi 	t3, zero, 1					;t3 = 1
 		br 		x_test
 
 	up_pix_left:
-		addi 	t3, t3, 2					;t3 += 2
+		addi 	t3, zero, 1					;t3 = 1
 		addi	t5, zero, 1					;t5 = 1
 		bne 	t4, t5, y_test_after		;if the ball goes up -> nothing
-		addi 	t4, t4, -2					;t4 = -1
+		addi 	t4, zero, -1				;t4 = -1
 		br 		y_test_after
 
 	low_pix_left:
-		addi 	t3, t3, 2					;t3 += 2
+		addi 	t3, zero, 1					;t3 = 1
 		addi	t5, zero, -1				;t5 = -1
 		bne 	t4, t5, y_test_after		;if the ball goes down -> nothing
-		addi 	t4, t4, 2					;t4 = +1
+		addi 	t4, zero, 1					;t4 = +1
 		br 		y_test_after
 
 
@@ -196,21 +196,21 @@ update_score:
 		addi	s2, s0, 1					;s0 = lower pixel of the right paddle
 		beq 	s1, s2, low_pix_right
 		bne 	s1, s0, x_test
-		addi 	t3, t3, -2					;t3 -= 2
+		addi 	t3, zero, -1				;t3  = -1
 		br 		x_test
 
 	up_pix_right:
-		addi 	t3, t3, -2					;t3 -= 2
+		addi 	t3, zero, -1				;t3  = -1
 		addi	t5, zero, 1					;t5 = 1
 		bne 	t4, t5, y_test_after		;if the ball goes up -> nothing
-		addi 	t4, t4, -2					;t4 = -1
+		addi 	t4, zero, -1				;t4 = -1
 		br 		y_test_after
 
 	low_pix_right:
-		addi 	t3, t3, -2					;t3 -= 2
+		addi 	t3, zero, -1				;t3  = -1
 		addi	t5, zero, -1				;t5 = -1
 		bne 	t4, t5, y_test_after		;if the ball goes down -> nothing
-		addi 	t4, t4, 2					;t4 = +1
+		addi 	t4, zero, 1					;t4 = +1
 		br 		y_test_after
 
 
@@ -222,11 +222,11 @@ update_score:
 
 
 	up_after:
-		add		t4, t4, t0;					;t4 = t4 + 2
+		addi 	t4, zero, 1					;t4 = +1
 		br 		x_test
 
 	bottom_after:
-		sub		t4, t4, t0;					;t4 = t4 - 2
+		addi 	t4, zero, -1				;t4 = -1
 		br 		x_test
 
 
