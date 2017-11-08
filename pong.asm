@@ -80,6 +80,13 @@ loop:	call 	clear_leds
 
 
 ; BEGIN:hit_test
+	stack_s_temp:
+		addi 	sp, sp, -20					;make 5 places in Stack
+		stw 	s0, sp(16)					;push s0
+		stw 	s1, sp(12)					;push s1
+		stw 	s2, sp(8)					;push s2
+		stw 	s3, sp(4)					;push s3
+		stw 	s4	sp(0)					;push s4
 	
 	hit_test:
 		addi 	t0, zero ,0x2 				;t0 = 2
@@ -103,24 +110,98 @@ loop:	call 	clear_leds
 		sub		t4, t4, t0;					;t4 = t4 - 2
 		br 		x_test
 
-	x_test:
-		beq		t1, zero, left				;if t2 = zero => left
+	x_paddle:
+		add 	s1, t1, t3					;next position x of the ball
+		beq		s1, zero, x_left_paddle		;if s1 = 0 branch x_left_paddle
 		addi	t5, zero, 0xB				;t5 = 11
-		beq		t1, t5, right				;if t2 = 11 => right
+		beq 	s1, t5, x_right_paddle		;if s1 = 11 branch x_right_paddle
+		br 		x_test
+
+
+	x_left_paddle:
+		ldw 	s1, t2, t4 					;s1 = next coord y of the ball
+		ldw 	s0, PADDLES(zero)			;s0 = y coord left_paddle
+		addi 	s2, s0, -1					;uppper pixel of the left paddle
+		beq		s1, s2, up_pix_left
+		addi	s2, s0, 1					;s0 = lower pixel of the left paddle
+		beq 	s1, s2, low_pix_right
+		bne 	s1, s0, x_test
+		addi 	t3, t3, 2					;t3 += 2
+		br 		x_test
+
+	up_pix_left:
+		addi 	t3, t3, 2					;t3 += 2
+		addi	t5, zero, 1					;t5 = 1
+		bne 	t4, t5, x_test				;if the ball goes up -> nothing
+		addi 	t4, t4, -2					;t4 = -1
+		br 		x_test
+
+	low_pix_left:
+		addi 	t3, t3, 2					;t3 += 2
+		addi	t5, zero, -1				;t5 = -1
+		bne 	t4, t5, x_test				;if the ball goes down -> nothing
+		addi 	t4, t4, 2					;t4 = +1
+		br 		x_test
+
+
+
+
+	x_right_paddle:
+		ldw 	s1, t2, t4 					;s1 = next coord y of the ball
+		ldw 	s0, PADDLES+4(zero)			;s0 = y coord right_paddle
+		addi 	s2, s0, -1					;uppper pixel of the right paddle
+		beq		s1, s2, up_pix_right
+		addi	s2, s0, 1					;s0 = lower pixel of the right paddle
+		beq 	s1, s2, low_pix_right
+		bne 	s1, s0, x_test
+		addi 	t3, t3, -2					;t3 -= 2
+		br 		x_test
+
+	up_pix_right:
+		addi 	t3, t3, -2					;t3 -= 2
+		addi	t5, zero, 1					;t5 = 1
+		bne 	t4, t5, x_test				;if the ball goes up -> nothing
+		addi 	t4, t4, -2					;t4 = -1
+		br 		x_test
+
+	low_pix_right:
+		addi 	t3, t3, -2					;t3 -= 2
+		addi	t5, zero, -1				;t5 = -1
+		bne 	t4, t5, x_test				;if the ball goes down -> nothing
+		addi 	t4, t4, 2					;t4 = +1
+		br 		x_test
+
+
+
+
+	x_test:
+		beq		t1, zero, left				;if t1 = zero => left
+		addi	t5, zero, 0xB				;t5 = 11
+		beq		t1, t5, right				;if t1 = 11 => right
+		add		v0, zero, zero				; v0 = 0
 		br		change_v
 
 	left:
-		add		t3, t3, t0;					;t3 = t3 + 2
+		addi	v0, zero, 2;				;v0 = 2
 		br 		change_v
 
 	right:
-		sub		t3, t3, t0;					;t3 = t3 - 2
+		addi	v0, zero, 1;				;v0 =  1
 		br 		change_v
 
 
 	change_v:
 		stw		t3, BALL+8(zero)			;t3 = BALL VX
 		stw		t4, BALL+12(zero)			;t4 = BALL VY	
+
+	pop_s_temp:
+		ldw 	s4, sp(0)					;pop s4
+		ldw 	s3, sp(4)					;pop s3
+		ldw 	s2, sp(8)					;pop s2
+		ldw 	s1, sp(12)					;pop s1
+		ldw 	s0, sp(16)					;pop s0
+		addi 	sp, sp, 20					;free space in Stack
+
 		ret
 
 
