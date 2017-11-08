@@ -399,7 +399,19 @@ update_score:
 
 ; END:display_score
 
+
 end:
+
+
+wait:
+	addi 	t0, zero, 10000
+timer:
+	addi 	t0, t0, -1
+	blt 	t0, 0, return
+	br timer
+return:
+	ret
+
 
 
 
