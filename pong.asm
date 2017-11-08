@@ -44,11 +44,12 @@ update_score:
 		addi	t0, t0, -4				;t0 -= 4
 		ldw 	t1, SCORES(t0)		
 		addi	t1, t1, 1				; update_score
+		add		t2, t1, zero
 		stw		t1, SCORES(t0)	
 		call 	display_score
-		addi	t2, zero, 10
-		beq		t1, t2, end
-		call 	wait_score
+		addi	t3, zero, 10
+		beq		t2, t3, end
+		;call 	wait_score
 		call 	init_round
 
 
