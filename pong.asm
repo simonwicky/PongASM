@@ -9,7 +9,7 @@ init_score:
 	    stw		zero, SCORES+4(zero)
 
 init_round:
-	  	addi	t0, zero, 3
+	  	addi	t0, zero, 4
 	    stw		t0, PADDLES(zero)			;initialize paddles
 	    stw   	t0, PADDLES+4(zero)
 
@@ -167,9 +167,9 @@ update_score:
 		beq		s1, s2, up_pix_left
 		addi	s2, s0, 1					;s0 = lower pixel of the left paddle
 		beq 	s1, s2, low_pix_left
-		bne 	s1, s0, y_test_after
+		bne 	s1, s0, x_test
 		addi 	t3, t3, 2					;t3 += 2
-		br 		y_test_after
+		br 		x_test
 
 	up_pix_left:
 		addi 	t3, t3, 2					;t3 += 2
@@ -195,9 +195,9 @@ update_score:
 		beq		s1, s2, up_pix_right
 		addi	s2, s0, 1					;s0 = lower pixel of the right paddle
 		beq 	s1, s2, low_pix_right
-		bne 	s1, s0, y_test_after
+		bne 	s1, s0, x_test
 		addi 	t3, t3, -2					;t3 -= 2
-		br 		y_test_after
+		br 		x_test
 
 	up_pix_right:
 		addi 	t3, t3, -2					;t3 -= 2
