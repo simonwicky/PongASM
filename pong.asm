@@ -9,13 +9,13 @@ init_score:
 	    stw		zero, SCORES+4(zero)
 
 init_round:
-	  	addi	t0, zero, 4
+	  	addi	t0, zero, 2
 	    stw		t0, PADDLES(zero)			;initialize paddles
 	    stw   	t0, PADDLES+4(zero)
 
 	    addi  	sp, zero, LEDS
 
-	    addi  	t0, zero, 6
+	    addi  	t0, zero, 2
 	    stw   	t0, BALL(zero)
 	    addi  	t0, zero, 3 				;initialize ball position
 	    stw    	t0, BALL +4(zero)
@@ -23,6 +23,7 @@ init_round:
 
 	    addi  	t0, zero, -1
 	    stw    	t0, BALL +8(zero)			;initialize ball speed
+	    addi  	t0, zero, 1
 	    stw    	t0, BALL +12(zero)			
 
 
@@ -112,7 +113,7 @@ update_score:
 		slli 	t3, t3, 0x0003				;t3 = t3 * 8
 		add 	t3, t3, a1					;t3 = t3 + coordy
 		sll 	t2, t2, t3					;t2 = t2 << t3
-		ldw 	t4, LEDS (zero)				;t4 = actual state of LEDS word we're going to change
+		ldw 	t4, LEDS (t0)				;t4 = actual state of LEDS word we're going to change
 		or 		t2, t2, t4					;t2 = t2 or t4s
 		stw 	t2, LEDS (t0)				;sto t2 in LEDS + 4
 		ret
@@ -128,7 +129,7 @@ update_score:
 		stw 	s1, 12(sp)					;push s1
 		stw 	s2, 8(sp)					;push s2
 		stw 	s3, 4(sp)					;push s3
-		stw 	s3, 0(sp)					;push s4
+		stw 	s4, 0(sp)					;push s4
 	
 		addi 	t0, zero ,0x2 				;t0 = 2
 		ldw		t1, BALL (zero)				;t1 = BALL X
@@ -238,9 +239,10 @@ update_score:
 
 
 	x_test:
-		beq		t1, zero, left				;if t1 = zero => left
+		add 	s1, t1, t3					;next position x of the ball
+		beq		s1, zero, left				;if t1 = zero => left
 		addi	t5, zero, 0xB				;t5 = 11
-		beq		t1, t5, right				;if t1 = 11 => right
+		beq		s1, t5, right				;if t1 = 11 => right
 		add		v0, zero, zero				; v0 = 0
 		br		change_v
 
@@ -319,16 +321,16 @@ update_score:
 		bge 	t1, t0, r_up						;if left_paddle >= 6 => r_up
 		add		t1, t1, t3							;t1 = t1 + 1
 
+	r_down:
+		beq		t6, zero, r_up						;if button(2) = 0 => r_up
+		bge 	t2, t0, r_up						;if right_paddle >= 6 => r_up
+		add		t2, t2, t3							;t2 = t2 + 1
 
 	r_up:
-		beq		t6, zero, r_down					;if button(2) = 0 => r_down
-		bge 	t3, t2, r_down						;if right <= 1 => r_down
+		beq		t7, zero, paddle_change				;if button(3) = 0 => paddle_change
+		bge 	t3, t2, paddle_change				;if right <= 1 => paddle_change
 		sub		t2, t2, t3							;t2 = t2 - 1
 
-	r_down:
-		beq		t7, zero, paddle_change				;if button(3) = 0 => paddle_change
-		bge 	t2, t0, paddle_change				;if right_paddle >= 6 => paddle_change
-		add		t2, t2, t3							;t2 = t2 + 1
 
 
 	paddle_change:
