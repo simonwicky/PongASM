@@ -9,13 +9,13 @@ init_score:
 	    stw		zero, SCORES+4(zero)
 
 init_round:
-	  	addi	t0, zero, 2
+	  	addi	t0, zero, 4
 	    stw		t0, PADDLES(zero)			;initialize paddles
 	    stw   	t0, PADDLES+4(zero)
 
 	    addi  	sp, zero, LEDS
 
-	    addi  	t0, zero, 2
+	    addi  	t0, zero, 6
 	    stw   	t0, BALL(zero)
 	    addi  	t0, zero, 3 				;initialize ball position
 	    stw    	t0, BALL +4(zero)
@@ -35,10 +35,10 @@ round:
 	   	call   	set_pixel
 	   	call  	draw_paddles
 	   	call 	hit_test
+		call 	wait
 	   	bne 	v0, zero, update_score		
 	   	call  	move_ball
 	   	call  	move_paddles
-	   	call 	wait
 	   	br    	round
 
 update_score:
@@ -317,8 +317,8 @@ update_score:
 		sub		t1, t1, t3							;t1 = t1 - 1
 
 	l_down:
-		beq		t5, zero, r_up						;if button(1) = 0 => r_up
-		bge 	t1, t0, r_up						;if left_paddle >= 6 => r_up
+		beq		t5, zero, r_down						;if button(1) = 0 => r_down
+		bge 	t1, t0, r_down						;if left_paddle >= 6 => r_down
 		add		t1, t1, t3							;t1 = t1 + 1
 
 	r_down:
