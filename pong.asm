@@ -23,7 +23,7 @@ init_round:
 
 	    addi  	t0, zero, -1
 	    stw    	t0, BALL +8(zero)			;initialize ball speed
-	    stw    	t0, BALL +12(zero)
+	    stw    	t0, BALL +12(zero)			
 
 
 
@@ -56,7 +56,6 @@ update_score:
 
 
 
-	
 		
 
 
@@ -129,7 +128,7 @@ update_score:
 		stw 	s1, 12(sp)					;push s1
 		stw 	s2, 8(sp)					;push s2
 		stw 	s3, 4(sp)					;push s3
-		stw 	s4,	0(sp)					;push s4
+		stw 	s3, 0(sp)					;push s4
 	
 		addi 	t0, zero ,0x2 				;t0 = 2
 		ldw		t1, BALL (zero)				;t1 = BALL X
@@ -162,12 +161,15 @@ update_score:
 
 	x_left_paddle:
 		add 	s1, t2, t4 					;s1 = next coord y of the ball
-		ldw 	s0, PADDLES(zero)			;s0 = y coord left_paddle
+		ldw 	s0, PADDLES(zero)			;s2 = y coord left_paddle
 		addi 	s2, s0, -1					;uppper pixel of the left paddle
+		beq		s2, t2, x_hit_left
 		beq		s1, s2, up_pix_left
-		addi	s2, s0, 1					;s0 = lower pixel of the left paddle
+		addi	s2, s0, 1					;s2 = lower pixel of the left paddle
+		beq		s2, t2, x_hit_left
 		beq 	s1, s2, low_pix_left
 		bne 	s1, s0, x_test
+	x_hit_left:
 		addi 	t3, zero, 1					;t3 = 1
 		br 		x_test
 
@@ -192,10 +194,13 @@ update_score:
 		add 	s1, t2, t4 					;s1 = next coord y of the ball
 		ldw 	s0, PADDLES+4(zero)			;s0 = y coord right_paddle
 		addi 	s2, s0, -1					;uppper pixel of the right paddle
+		beq		s2, t2, x_hit_right
 		beq		s1, s2, up_pix_right
 		addi	s2, s0, 1					;s0 = lower pixel of the right paddle
+		beq		s2, t2, x_hit_right
 		beq 	s1, s2, low_pix_right
 		bne 	s1, s0, x_test
+	x_hit_right:
 		addi 	t3, zero, -1				;t3  = -1
 		br 		x_test
 
@@ -349,7 +354,7 @@ update_score:
 		ldw		t0, PADDLES (zero)					;left_paddle_coord
 		add 	a0, zero, zero						;a0 = xcoord
 		addi 	a1, t0, -1							;a1 = y coord up pixel
-		call 	set_pixel							;draw 
+		call 	clear_leds							;draw
 		addi 	a1, a1, 1							;a1 = center pixel y coord
 		call 	set_pixel							;draw
 		addi	a1, a1, 1							;a1 = bottom pixel coord y
