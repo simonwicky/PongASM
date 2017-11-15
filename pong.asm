@@ -161,7 +161,7 @@ update_score:
 
 	x_left_paddle:
 		add 	s1, t2, t4 					;s1 = next coord y of the ball
-		ldw 	s0, PADDLES(zero)			;s2 = y coord left_paddle
+		ldw 	s0, PADDLES(zero)			;s0 = y coord left_paddle
 		addi 	s2, s0, -1					;uppper pixel of the left paddle
 		beq		s2, t2, x_hit_left
 		beq		s1, s2, up_pix_left
@@ -342,7 +342,6 @@ update_score:
 
 
 ; BEGIN:draw_paddles
-
 	draw_paddles:
 
 		addi	sp, sp, -12							;make free space in Stack 
@@ -354,7 +353,7 @@ update_score:
 		ldw		t0, PADDLES (zero)					;left_paddle_coord
 		add 	a0, zero, zero						;a0 = xcoord
 		addi 	a1, t0, -1							;a1 = y coord up pixel
-		call 	clear_leds							;draw
+		call 	set_pixel							;draw
 		addi 	a1, a1, 1							;a1 = center pixel y coord
 		call 	set_pixel							;draw
 		addi	a1, a1, 1							;a1 = bottom pixel coord y
@@ -376,11 +375,7 @@ update_score:
 		addi 	sp, sp, 12
 
 		ret
-		
-
-			
-
-
+	
 ; END:draw_paddles
 
 
